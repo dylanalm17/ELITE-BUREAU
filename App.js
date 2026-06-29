@@ -1,25 +1,25 @@
-import { useState } from 'react';
-import emailjs from '@emailjs/browser';
+import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function App() {
-  const SERVICE_ID = 'service_1phz38i';
-  const TEMPLATE_ID = 'template_n0t4z64';
-  const PUBLIC_KEY = 'DBYnw2FwUq-byAH0_';
+  const SERVICE_ID = "service_1phz38i";
+  const TEMPLATE_ID = "template_n0t4z64";
+  const PUBLIC_KEY = "DBYnw2FwUq-byAH0_";
 
-  const bureaux = ['RANC 1', 'RANC 2', 'RANC 3'];
+  const bureaux = ["RANC 1", "RANC 2", "RANC 3"];
 
   const timeSlots = [
-    ['10:00', '12:00'],
-    ['12:00', '14:00'],
-    ['14:00', '16:00'],
-    ['16:00', '18:00'],
+    ["10:00", "12:00"],
+    ["12:00", "14:00"],
+    ["14:00", "16:00"],
+    ["16:00", "18:00"],
   ];
 
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState("");
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [reservations, setReservations] = useState([]);
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const isDisponible = (bureau, date, start, end) => {
     return !reservations.some(
@@ -44,7 +44,7 @@ export default function App() {
       {
         bureau: reservation.bureau,
         date: reservation.date,
-        heure: reservation.start + ' - ' + reservation.end,
+        heure: reservation.start + " - " + reservation.end,
         email: reservation.email,
         qr: qr,
       },
@@ -54,7 +54,7 @@ export default function App() {
 
   const reserver = () => {
     if (!email) {
-      setMessage('Entre ton email');
+      setMessage("Entre ton email");
       return;
     }
 
@@ -69,20 +69,24 @@ export default function App() {
     setReservations([...reservations, newReservation]);
     envoyerEmail(newReservation);
 
-    setMessage('Réservation confirmée !');
+    setMessage("Réservation confirmée !");
     setSelectedSlot(null);
-    setEmail('');
+    setEmail("");
   };
 
   return (
     <div style={{ padding: 20 }}>
       <h1>Elite Bureau</h1>
 
-      <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+      />
 
       {selectedDate && (
         <div style={{ marginTop: 20 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10 }}>
             {bureaux.map((bureau) =>
               timeSlots.map(([start, end], i) => {
                 const dispo = isDisponible(bureau, selectedDate, start, end);
@@ -94,7 +98,11 @@ export default function App() {
                       if (!dispo) return;
                       setSelectedSlot({ bureau, start, end });
                     }}
-                    style={{ backgroundColor: dispo ? 'green' : 'red', color: 'white', padding: 10 }}
+                    style={{
+                      backgroundColor: dispo ? "green" : "red",
+                      color: "white",
+                      padding: 10
+                    }}
                   >
                     {bureau} {start}-{end}
                   </div>
@@ -106,10 +114,28 @@ export default function App() {
       )}
 
       {selectedSlot && (
-        <div>
-          <img src={generateQR(selectedSlot.bureau)} alt="QR" />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-          <button onClick={reserver}>Confirmer</button>
+        <div style={{ marginTop: 20 }}>
+          <img
+            src={generateQR(`${selectedSlot.bureau}-${selectedSlot.start}-${selectedSlot.end}`)}
+            alt="QR"
+            style={{ width: 150 }}
+          />
+
+          <br />
+
+          <input
+            type="email"
+            placeholder="Ton email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <br />
+
+          <button onClick={reserver}>
+            Confirmer
+          </button>
+
           <p>{message}</p>
         </div>
       )}
