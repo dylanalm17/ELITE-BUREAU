@@ -101,10 +101,14 @@ export default function App() {
                     style={{
                       backgroundColor: dispo ? "green" : "red",
                       color: "white",
-                      padding: 10
+                      padding: 10,
+                      borderRadius: 10,
+                      cursor: dispo ? "pointer" : "not-allowed"
                     }}
                   >
-                    {bureau} {start}-{end}
+                    <b>{bureau}</b>
+                    <p>{start} - {end}</p>
+                    <p>{dispo ? "Disponible" : "Réservé"}</p>
                   </div>
                 );
               })
@@ -115,9 +119,14 @@ export default function App() {
 
       {selectedSlot && (
         <div style={{ marginTop: 20 }}>
+          <h3>
+            {selectedSlot.bureau} {selectedSlot.start}-{selectedSlot.end}
+          </h3>
+
+          {/* ✅ CORRECTION ICI */}
           <img
             src={generateQR(`${selectedSlot.bureau}-${selectedSlot.start}-${selectedSlot.end}`)}
-            alt="QR"
+            alt="QR Code"
             style={{ width: 150 }}
           />
 
