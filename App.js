@@ -76,3 +76,16 @@ export default function App() {
 
   return (
     <div style={{ padding: 20 }}>
+      <h1>Elite Bureau</h1>
+
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+      />
+
+      {selectedDate && (
+        <div style={{ marginTop: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10 }}>
+            {bureaux.map((bureau) =>
+              timeSlots.map(([start, end], i) => {
