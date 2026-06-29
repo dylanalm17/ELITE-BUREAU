@@ -69,85 +69,10 @@ export default function App() {
     setReservations([...reservations, newReservation]);
     envoyerEmail(newReservation);
 
-    setMessage("Réservation confirmée !");
+    setMessage("✅ Réservation confirmée !");
     setSelectedSlot(null);
     setEmail("");
   };
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Elite Bureau</h1>
-
-      <input
-        type="date"
-        value={selectedDate}
-        onChange={(e) => setSelectedDate(e.target.value)}
-      />
-
-      {selectedDate && (
-        <div style={{ marginTop: 20 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10 }}>
-            {bureaux.map((bureau) =>
-              timeSlots.map(([start, end], i) => {
-                const dispo = isDisponible(bureau, selectedDate, start, end);
-
-                return (
-                  <div
-                    key={bureau + i}
-                    onClick={() => {
-                      if (!dispo) return;
-                      setSelectedSlot({ bureau, start, end });
-                    }}
-                    style={{
-                      backgroundColor: dispo ? "green" : "red",
-                      color: "white",
-                      padding: 10,
-                      borderRadius: 10,
-                      cursor: dispo ? "pointer" : "not-allowed"
-                    }}
-                  >
-                    <b>{bureau}</b>
-                    <p>{start} - {end}</p>
-                    <p>{dispo ? "Disponible" : "Réservé"}</p>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-      )}
-
-      {selectedSlot && (
-        <div style={{ marginTop: 20 }}>
-          <h3>
-            {selectedSlot.bureau} {selectedSlot.start}-{selectedSlot.end}
-          </h3>
-
-          {/* ✅ CORRECTION ICI */}
-          <img
-            src={generateQR(`${selectedSlot.bureau}-${selectedSlot.start}-${selectedSlot.end}`)}
-            alt="QR Code"
-            style={{ width: 150 }}
-          />
-
-          <br />
-
-          <input
-            type="email"
-            placeholder="Ton email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <br />
-
-          <button onClick={reserver}>
-            Confirmer
-          </button>
-
-          <p>{message}</p>
-        </div>
-      )}
-    </div>
-  );
-}
